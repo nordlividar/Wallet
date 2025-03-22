@@ -1,8 +1,9 @@
-import json
-from collections import defaultdict
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+import os
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 @app.route("/analyze", methods=["POST"])
 def analyze_spending():
@@ -20,17 +21,5 @@ def analyze_spending():
     return jsonify({"suggestion": suggestion})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
-
-
-
-tx_log = defaultdict(int)
-
-def log_transaction(sender, amount):
-    tx_log[sender] += amount
-    if tx_log[sender] > 10 * 10**18:  # >10 WPU spent
-        print(f"Alert: You've spent {tx_log[sender] / 10**18} WPU—slow down!")
-
-# Simulate txs for now—later connect to blockchain
-log_transaction("0xYourAddress", 5 * 10**18)
-log_transaction("0xYourAddress", 6 * 10**18)
+    port = int(os.getenv("PORT", 5000))  # Use PORT from env, default to 5000
+    app.run(host="0.0.0.0", port=port)
