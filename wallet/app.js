@@ -6,7 +6,7 @@ if (typeof ethers === "undefined") {
   }
   
   let provider, signer, contract, totalSpent = 0, userAddress, transactions = [];
-  const contractAddress = "0x53911907277be8f6E6B2d3D63A5796410EfA5A0";
+  const contractAddress = "0x53911907277be8f6E6B2d3D63A5796410EfA5A0e";
   const abi = [
     "function balanceOf(address) view returns (uint256)",
     "function transfer(address to, uint256 amount) returns (bool)",
@@ -258,7 +258,7 @@ if (typeof ethers === "undefined") {
   // Call AI server
   async function callAI(totalSpent) {
     try {
-      const response = await fetch("http://localhost:5000/analyze", {
+      const response = await fetch("https://worldpulse-ai-bdaf19009704.herokuapp.com/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ totalSpent })
