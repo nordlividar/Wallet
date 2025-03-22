@@ -6,7 +6,7 @@ if (typeof ethers === "undefined") {
   }
   
   let provider, signer, contract, totalSpent = 0, userAddress, transactions = [];
-  const contractAddress = "0x53911907277be8f6E6B2d3D63A5796410EfA5A0";
+  const contractAddress = "0x53911907277be8f6E6B2d3D63A5796410EfA5A0e";
   const abi = [
     "function balanceOf(address) view returns (uint256)",
     "function transfer(address to, uint256 amount) returns (bool)",
