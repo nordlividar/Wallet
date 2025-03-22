@@ -1,13 +1,13 @@
-# Sample Hardhat Project
+# WorldPulse Wallet
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
+A "living" wallet for the WorldPulse (WPU) token on Sepolia, with AI-powered spending suggestions.
 
-Try running some of the following tasks:
+## Tech Stack
+- **Smart Contract:** Hardhat, Solidity
+- **Frontend:** HTML, CSS, JavaScript, Ethers.js
+- **AI Server:** Python, Flask
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.js
-```
+## Setup Instructions
+1. **Run the Wallet Locally:**
+   ```bash
+   npx live-server wallet/

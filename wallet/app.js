@@ -27,6 +27,10 @@ if (typeof ethers === "undefined") {
     // Override resolveName to skip ENS
     async resolveName(name) {
       console.debug("resolveName called with:", name);
+      if (typeof name !== "string") {
+        console.error("resolveName received invalid input:", name);
+        throw new Error("Invalid address input for resolveName");
+      }
       if (ethers.isAddress(name)) {
         console.debug("Input is a valid address, returning as-is:", name);
         return name; // Return the address as-is
@@ -140,14 +144,20 @@ if (typeof ethers === "undefined") {
       signer = await provider.getSigner();
   
       // Validate contract address
-      if (!ethers.isAddress(contractAddress)) {
+      if (!contractAddress || typeof contractAddress !== "string" || !ethers.isAddress(contractAddress)) {
         throw new Error("Invalid contract address: " + contractAddress);
       }
       console.debug("Initializing contract with address:", contractAddress);
+  
+      // Use a raw contract instance to bypass ENS
       contract = new ethers.Contract(contractAddress, abi, signer);
   
       // Cache the user address
-      userAddress = (await ethereumProvider.request({ method: "eth_accounts" }))[0];
+      const accounts = await ethereumProvider.request({ method: "eth_accounts" });
+      if (!accounts || accounts.length === 0) {
+        throw new Error("No accounts found. Please connect your wallet.");
+      }
+      userAddress = accounts[0];
       console.debug("User address:", userAddress);
   
       // Update UI
@@ -160,7 +170,7 @@ if (typeof ethers === "undefined") {
       // Listen for PulseEvent to track spending
       contract.on("PulseEvent", (sender, amount, pulseCount) => {
         console.debug("PulseEvent received:", { sender, amount, pulseCount });
-        if (sender.toLowerCase() === userAddress.toLowerCase()) {
+        if (sender && sender.toLowerCase() === userAddress.toLowerCase()) {
           const amountInEther = Number(amount) / 1e18;
           totalSpent += amountInEther;
           checkSpending(totalSpent);
@@ -211,7 +221,7 @@ if (typeof ethers === "undefined") {
       }
       const to = document.getElementById("address").value;
       const amountInput = document.getElementById("amount").value;
-      if (!ethers.isAddress(to)) {
+      if (!to || typeof to !== "string" || !ethers.isAddress(to)) {
         throw new Error("Invalid recipient address: " + to);
       }
       if (!amountInput || Number(amountInput) <= 0) {
